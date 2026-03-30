@@ -1,0 +1,736 @@
+; Jacking in...
+; Connecting using "Leiningen" project type.
+; Starting Jack-in: (cd /Users/jordan/source/repos/re-re-frame; lein update-in :dependencies conj '[nrepl,"1.5.1"]' -- update-in :plugins conj '[cider/cider-nrepl,"0.58.0"]' -- update-in '[:repl-options,:nrepl-middleware]' conj '["cider.nrepl/cider-middleware"]' -- repl :headless)
+; Using host:port 127.0.0.1:53821 ...
+; Hooking up nREPL sessions on port 53821...
+; Connected session: clj, port: 53821
+; Evaluating code from settings: 'calva.autoEvaluateCode.onConnect.clj'
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+nil
+clj꞉re-re-frame.core꞉> 
+"Please see https://calva.io/output/#about-stdout-in-the-repl-window
+about why stdout printed to this file is prepended with `;` to be line comments."
+clj꞉re-re-frame.core꞉> 
+; Jack-in done.
+clj꞉re-re-frame.core꞉> 
+(symbol 'test)
+test
+clj꞉re-re-frame.core꞉> 
+(symbol re-frame.core/dispatch)
+; Execution error (IllegalArgumentException) at re-re-frame.core/eval12129 (repl.calva-repl:19).
+; no conversion to symbol
+clj꞉re-re-frame.core꞉> 
+(name re-frame.core/dispatch)
+; Execution error (ClassCastException) at re-re-frame.core/eval12170 (repl.calva-repl:23).
+; class re_frame.core$dispatch cannot be cast to class clojure.lang.Named (re_frame.core$dispatch is in unnamed module of loader clojure.lang.DynamicClassLoader @36e43829; clojure.lang.Named is in unnamed module of loader 'app')
+clj꞉re-re-frame.core꞉> 
+(meta re-frame.core/dispatch)
+nil
+clj꞉re-re-frame.core꞉> 
+(clojure.repl/demunge re-frame.core/dispatch)
+; Execution error (ClassCastException) at re-re-frame.core/eval12174 (repl.calva-repl:30).
+; class re_frame.core$dispatch cannot be cast to class java.lang.String (re_frame.core$dispatch is in unnamed module of loader clojure.lang.DynamicClassLoader @36e43829; java.lang.String is in module java.base of loader 'bootstrap')
+clj꞉re-re-frame.core꞉> 
+(clojure.main/demunge re-frame.core/dispatch)
+; Execution error (ClassCastException) at re-re-frame.core/eval12176 (repl.calva-repl:34).
+; class re_frame.core$dispatch cannot be cast to class java.lang.String (re_frame.core$dispatch is in unnamed module of loader clojure.lang.DynamicClassLoader @36e43829; java.lang.String is in module java.base of loader 'bootstrap')
+clj꞉re-re-frame.core꞉> 
+(clojure.main/demunge 're-frame.core/dispatch)
+; Execution error (ClassCastException) at re-re-frame.core/eval12178 (repl.calva-repl:38).
+; class clojure.lang.Symbol cannot be cast to class java.lang.String (clojure.lang.Symbol is in unnamed module of loader 'app'; java.lang.String is in module java.base of loader 'bootstrap')
+clj꞉re-re-frame.core꞉> 
+(name 're-frame.core/dispatch)
+"dispatch"
+clj꞉re-re-frame.core꞉> 
+(resolve 're-frame.core/dispatch)
+#'re-frame.core/dispatch
+clj꞉re-re-frame.core꞉> 
+((resolve 're-frame.core/dispatch) [:asdf])
+nil
+clj꞉re-re-frame.core꞉> 
+; Mar 29, 2026 3:11:56 PM clojure.tools.logging$eval528$fn__531 invoke
+; SEVERE: re-frame: no :event handler registered for: :asdf
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-sym]
+  `(defn (-> ~@f-sym name symbol)
+     [& args]
+     (apply (resolve ~@f-sym) args)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias 'rf/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:200:1).
+; (clojure.core/-> quote rf/dispatch clojure.core/name clojure.core/symbol) - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(name 're-frame.core/dispatch)
+"dispatch"
+clj꞉re-re-frame.core꞉> 
+(-> 'rf/dispatch name symbol)
+dispatch
+clj꞉re-re-frame.core꞉> 
+(make-alias 'rf/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:201:1).
+; (clojure.core/-> quote rf/dispatch clojure.core/name clojure.core/symbol) - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-sym]
+  `(defn (-> f-sym name symbol)
+     [& args]
+     (apply (resolve ~@f-sym) args)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias 'rf/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:201:1).
+; (clojure.core/-> re-re-frame.core/f-sym clojure.core/name clojure.core/symbol) - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-sym]
+  `(defn (-> ~@f-sym name symbol)
+     [& args]
+     (apply (resolve ~@f-sym) args)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias 'rf/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:201:1).
+; (clojure.core/-> quote rf/dispatch clojure.core/name clojure.core/symbol) - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(make-alias 're-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:201:1).
+; (clojure.core/-> quote re-frame.core/dispatch clojure.core/name clojure.core/symbol) - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-sym]
+  `(defn (-> ~@f-sym name)
+     [& args]
+     (apply (resolve ~@f-sym) args)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias 'rf/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:201:1).
+; (clojure.core/-> quote rf/dispatch clojure.core/name) - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-sym]
+  `(let [test# (-> ~@f-sym name symbol)]
+     (defn test#
+       [& args]
+       (apply (resolve ~@f-sym) args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias 'rf/dispatch)
+; Syntax error compiling at (src/re_re_frame/core.cljc:202:1).
+; Unable to resolve symbol: quote in this context
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-sym]
+  `(defn (-> ~f-sym name symbol)
+     [& args]
+     (apply (resolve ~f-sym) args)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias 'rf/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:201:1).
+; (clojure.core/-> (quote rf/dispatch) clojure.core/name clojure.core/symbol) - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-sym]
+  `(let [test# (-> ~f-sym name symbol)]
+     (defn test#
+       [& args]
+       (apply (resolve ~f-sym) args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias 'rf/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:202:1).
+; re-re-frame.core/args - failed: simple-symbol? at: [:fn-tail :arity-1 :params :var-params :var-form :local-symbol] spec: :clojure.core.specs.alpha/local-name
+; re-re-frame.core/args - failed: vector? at: [:fn-tail :arity-1 :params :var-params :var-form :seq-destructure] spec: :clojure.core.specs.alpha/seq-binding-form
+; re-re-frame.core/args - failed: map? at: [:fn-tail :arity-1 :params :var-params :var-form :map-destructure] spec: :clojure.core.specs.alpha/map-bindings
+; re-re-frame.core/args - failed: map? at: [:fn-tail :arity-1 :params :var-params :var-form :map-destructure] spec: :clojure.core.specs.alpha/map-special-binding
+; & - failed: vector? at: [:fn-tail :arity-n :bodies :params] spec: :clojure.core.specs.alpha/param-list
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-sym]
+  `(let [test# (-> ~f-sym name symbol)]
+     (defn test#
+       [& args]
+       (apply (resolve ~f-sym) args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias 'rf/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:201:1).
+; re-re-frame.core/args - failed: simple-symbol? at: [:fn-tail :arity-1 :params :var-params :var-form :local-symbol] spec: :clojure.core.specs.alpha/local-name
+; re-re-frame.core/args - failed: vector? at: [:fn-tail :arity-1 :params :var-params :var-form :seq-destructure] spec: :clojure.core.specs.alpha/seq-binding-form
+; re-re-frame.core/args - failed: map? at: [:fn-tail :arity-1 :params :var-params :var-form :map-destructure] spec: :clojure.core.specs.alpha/map-bindings
+; re-re-frame.core/args - failed: map? at: [:fn-tail :arity-1 :params :var-params :var-form :map-destructure] spec: :clojure.core.specs.alpha/map-special-binding
+; & - failed: vector? at: [:fn-tail :arity-n :bodies :params] spec: :clojure.core.specs.alpha/param-list
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-sym]
+  `(let [test# (-> ~f-sym name symbol)]
+     (print test#)
+     (defn test#
+       [& args]
+       (apply (resolve ~f-sym) args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias 'rf/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:202:1).
+; re-re-frame.core/args - failed: simple-symbol? at: [:fn-tail :arity-1 :params :var-params :var-form :local-symbol] spec: :clojure.core.specs.alpha/local-name
+; re-re-frame.core/args - failed: vector? at: [:fn-tail :arity-1 :params :var-params :var-form :seq-destructure] spec: :clojure.core.specs.alpha/seq-binding-form
+; re-re-frame.core/args - failed: map? at: [:fn-tail :arity-1 :params :var-params :var-form :map-destructure] spec: :clojure.core.specs.alpha/map-bindings
+; re-re-frame.core/args - failed: map? at: [:fn-tail :arity-1 :params :var-params :var-form :map-destructure] spec: :clojure.core.specs.alpha/map-special-binding
+; & - failed: vector? at: [:fn-tail :arity-n :bodies :params] spec: :clojure.core.specs.alpha/param-list
+clj꞉re-re-frame.core꞉> 
+(let [f-sym 'rf/dispatch
+      test# (-> f-sym name symbol)]
+  (print test#)
+  (defn test#
+    [& args]
+    (apply (resolve f-sym) args)))
+; dispatch
+#'re-re-frame.core/test#
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-sym]
+  (let [f-name (-> f-sym name symbol)]
+    `(defn ~f-name
+       [& args]
+       (apply (resolve ~f-sym) args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias 'rf/dispatch)
+; Unexpected error (ClassCastException) macroexpanding make-alias at (src/re_re_frame/core.cljc:207:1).
+; class clojure.lang.Cons cannot be cast to class clojure.lang.Named (clojure.lang.Cons and clojure.lang.Named are in unnamed module of loader 'app')
+clj꞉re-re-frame.core꞉> 
+(let [f-sym 'rf/dispatch
+      f-name (-> f-sym name symbol)]
+  f-name)
+dispatch
+clj꞉re-re-frame.core꞉> 
+(make-alias 'rf/dispatch)
+; Unexpected error (ClassCastException) macroexpanding make-alias at (src/re_re_frame/core.cljc:205:1).
+; class clojure.lang.Cons cannot be cast to class clojure.lang.Named (clojure.lang.Cons and clojure.lang.Named are in unnamed module of loader 'app')
+clj꞉re-re-frame.core꞉> 
+f-name
+; Syntax error compiling at (src/re_re_frame/core.cljc:0:0).
+; Unable to resolve symbol: f-name in this context
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-sym]
+  (let [f-name (-> f-sym name symbol)]
+    (print f-name)
+    `(defn ~f-name
+       [& args]
+       (apply (resolve ~f-sym) args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias 'rf/dispatch)
+; Unexpected error (ClassCastException) macroexpanding make-alias at (src/re_re_frame/core.cljc:206:1).
+; class clojure.lang.Cons cannot be cast to class clojure.lang.Named (clojure.lang.Cons and clojure.lang.Named are in unnamed module of loader 'app')
+clj꞉re-re-frame.core꞉> 
+[& args]
+; Syntax error compiling at (src/re_re_frame/core.cljc:0:0).
+; Unable to resolve symbol: & in this context
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-sym]
+  (let [f-name# (-> f-sym name symbol)]
+    `(defn ~f-name#
+       [& args]
+       (apply (resolve ~f-sym) args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias 'rf/dispatch)
+; Unexpected error (ClassCastException) macroexpanding make-alias at (src/re_re_frame/core.cljc:205:1).
+; class clojure.lang.Cons cannot be cast to class clojure.lang.Named (clojure.lang.Cons and clojure.lang.Named are in unnamed module of loader 'app')
+clj꞉re-re-frame.core꞉> 
+(meta #'re-frame.core/dispatch)
+{:arglists ([event]),
+ :doc
+ "Queue `event` for processing (handling).\n\n  `event` is a vector and the first element is typically a keyword\n  which identifies the kind of event.\n\n  The event will be added to a FIFO processing queue, so event\n  handling does not happen immediately. It will happen 'very soon'\n  but not now. And if the queue already contains events, they\n  will be processed first.\n\n  Usage:\n\n      \n      (dispatch [:order \"pizza\" {:supreme 2 :meatlovers 1 :veg 1}])\n  ",
+ :api-docs/heading "Dispatching Events",
+ :line 23,
+ :column 1,
+ :file "re_frame/core.cljc",
+ :name dispatch,
+ :ns #namespace[re-frame.core]}
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Unexpected error (ClassCastException) macroexpanding make-alias at (src/re_re_frame/core.cljc:205:1).
+; class clojure.lang.Cons cannot be cast to class clojure.lang.Named (clojure.lang.Cons and clojure.lang.Named are in unnamed module of loader 'app')
+clj꞉re-re-frame.core꞉> 
+(#'re-frame.core/dispatch [:disas])
+nil
+clj꞉re-re-frame.core꞉> 
+; Mar 29, 2026 3:24:24 PM clojure.tools.logging$eval528$fn__531 invoke
+; SEVERE: re-frame: no :event handler registered for: :disas
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(defn ~f-name
+       [& args]
+       (apply ~f-var args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:205:1).
+; nil - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(let [f-var #'rf/dispatch
+      f-name (-> f-var meta :name)]
+  f-name)
+dispatch
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(defn `(-> f-var meta :name)
+       [& args]
+       (apply ~f-var args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:205:1).
+; (clojure.core/seq (clojure.core/concat (clojure.core/list (quote clojure.core/->)) (clojure.core/list (quote re-re-frame.core/f-var)) (clojure.core/list (quote clojure.core/meta)) (clojure.core/list :name))) - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(defn (-> f-var meta :name)
+       [& args]
+       (apply ~f-var args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:205:1).
+; (clojure.core/-> re-re-frame.core/f-var clojure.core/meta :name) - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(defn ~f-name
+       [& args]
+       (apply ~f-var args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:205:1).
+; nil - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(let [f-var #'rf/dispatch
+      f-name (-> f-var meta :name)]
+  (simple-symbol? f-name))
+true
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:205:1).
+; nil - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(defn ~f-name
+       [& args]
+       (apply ~f-var args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:205:1).
+; nil - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:205:1).
+; nil - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:205:1).
+; nil - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:205:1).
+; nil - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(let [f-var #'re-frame.core/dispatch
+      f-name (-> f-var meta :name)]
+  (simple-symbol? f-name))
+true
+clj꞉re-re-frame.core꞉> 
+(let [f-var #'re-frame.core/dispatch
+      f-name (-> f-var meta :name)]
+  f-name)
+dispatch
+clj꞉re-re-frame.core꞉> 
+[f-name# (-> f-var meta :name)]
+; Syntax error compiling at (src/re_re_frame/core.cljc:0:0).
+; Unable to resolve symbol: f-name# in this context
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  `(let [f-name# (-> f-var meta :name)]
+     (defn ~f-name#
+       [& args]
+       (apply ~f-var args))))
+; Syntax error compiling at (src/re_re_frame/core.cljc:193:1).
+; Unable to resolve symbol: f-name# in this context
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  `(let [f-name# (-> ~f-var meta :name)]
+     (defn f-name#
+       [& args]
+       (apply ~f-var args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(let [f-var #'re-frame.core/dispatch
+      f-name (-> f-var meta :name)]
+  f-name)
+dispatch
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:205:1).
+; re-re-frame.core/args - failed: simple-symbol? at: [:fn-tail :arity-1 :params :var-params :var-form :local-symbol] spec: :clojure.core.specs.alpha/local-name
+; re-re-frame.core/args - failed: vector? at: [:fn-tail :arity-1 :params :var-params :var-form :seq-destructure] spec: :clojure.core.specs.alpha/seq-binding-form
+; re-re-frame.core/args - failed: map? at: [:fn-tail :arity-1 :params :var-params :var-form :map-destructure] spec: :clojure.core.specs.alpha/map-bindings
+; re-re-frame.core/args - failed: map? at: [:fn-tail :arity-1 :params :var-params :var-form :map-destructure] spec: :clojure.core.specs.alpha/map-special-binding
+; & - failed: vector? at: [:fn-tail :arity-n :bodies :params] spec: :clojure.core.specs.alpha/param-list
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    f-name))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+nil
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(f-name)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error compiling at (src/re_re_frame/core.cljc:203:1).
+; No such var: re-re-frame.core/f-name
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(~f-name)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error (IllegalArgumentException) compiling at (src/re_re_frame/core.cljc:203:1).
+; Can't call nil, form: (nil)
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(~f-var)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Execution error (ArityException) at re-re-frame.core/eval12345 (core.cljc:203).
+; Wrong number of args (0) passed to: re-frame.core/dispatch
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(-> ~f-var meta)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+{:arglists ([event]),
+ :doc
+ "Queue `event` for processing (handling).\n\n  `event` is a vector and the first element is typically a keyword\n  which identifies the kind of event.\n\n  The event will be added to a FIFO processing queue, so event\n  handling does not happen immediately. It will happen 'very soon'\n  but not now. And if the queue already contains events, they\n  will be processed first.\n\n  Usage:\n\n      \n      (dispatch [:order \"pizza\" {:supreme 2 :meatlovers 1 :veg 1}])\n  ",
+ :api-docs/heading "Dispatching Events",
+ :line 23,
+ :column 1,
+ :file "re_frame/core.cljc",
+ :name dispatch,
+ :ns #namespace[re-frame.core]}
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(-> ~f-var meta  :name)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+dispatch
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(defn (-> ~f-var meta :name)
+       [& args]
+       (apply ~f-var args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:205:1).
+; (clojure.core/-> (var re-frame.core/dispatch) clojure.core/meta :name) - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(defn (-> ~f-var meta :name symbol)
+       [& args]
+       (apply ~f-var args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:205:1).
+; (clojure.core/-> (var re-frame.core/dispatch) clojure.core/meta :name clojure.core/symbol) - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(-> ~f-var meta :name)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+dispatch
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(-> ~f-var meta :name simple-keyword?)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+false
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(-> ~f-var meta :name)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+dispatch
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(-> ~f-var meta :name name)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+"dispatch"
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(-> ~f-var meta :name name symbol)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(-> ~f-var meta :name name symbol)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+dispatch
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(-> ~f-var meta :name name symbol simple-symbol?)))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+true
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(defn (-> ~f-var meta :name name symbol)
+       [& args]
+       (apply ~f-var args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:205:1).
+; (clojure.core/-> (var re-frame.core/dispatch) clojure.core/meta :name clojure.core/name clojure.core/symbol) - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+`(-> ~f-var meta :name name symbol)
+; Syntax error compiling at (src/re_re_frame/core.cljc:0:0).
+; Unable to resolve symbol: f-var in this context
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(-> ~f-var meta :name name symbol)
+    ))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+dispatch
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(-> ~f-var meta :name name symbol simple-symbol?)
+    ))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+true
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name name symbol)]
+    `(defn f-name
+       [& args]
+       (apply ~f-var args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Unexpected error (NullPointerException) macroexpanding make-alias at (src/re_re_frame/core.cljc:205:1).
+; Cannot invoke "clojure.lang.Named.getName()" because "x" is null
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name name symbol)]
+    `(defn f-name
+       [& args]
+       (print "hello"))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+~f-name
+; Syntax error compiling at (src/re_re_frame/core.cljc:0:0).
+; Unable to resolve symbol: f-name in this context
+clj꞉re-re-frame.core꞉> 
+~f-name
+; Syntax error compiling at (src/re_re_frame/core.cljc:0:0).
+; Unable to resolve symbol: f-name in this context
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name name symbol)]
+    `(defn ~f-name
+       [& args]
+       (apply ~f-var args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Unexpected error (NullPointerException) macroexpanding make-alias at (src/re_re_frame/core.cljc:205:1).
+; Cannot invoke "clojure.lang.Named.getName()" because "x" is null
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name name symbol)]
+    `(defn ~f-name
+       [& args]
+       (print "hellop"))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Unexpected error (NullPointerException) macroexpanding make-alias at (src/re_re_frame/core.cljc:205:1).
+; Cannot invoke "clojure.lang.Named.getName()" because "x" is null
+clj꞉re-re-frame.core꞉> 
+:name
+:name
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name)]
+    `(defn ~f-name
+       [& args]
+       (apply ~f-var args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:205:1).
+; nil - failed: simple-symbol? at: [:fn-name] spec: :clojure.core.specs.alpha/defn-args
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  (let [f-name (-> f-var meta :name name)]
+    `(defn ~f-name
+       [& args]
+       (apply ~f-var args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Unexpected error (NullPointerException) macroexpanding make-alias at (src/re_re_frame/core.cljc:205:1).
+; Cannot invoke "clojure.lang.Named.getName()" because "x" is null
+clj꞉re-re-frame.core꞉> 
+[f-var]
+; Syntax error compiling at (src/re_re_frame/core.cljc:0:0).
+; Unable to resolve symbol: f-var in this context
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  `(let [f-name# (-> f-var meta :name name symbol)]
+     (defn f-name#
+       [& args]
+       (apply ~f-var args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error compiling at (src/re_re_frame/core.cljc:205:1).
+; No such var: re-re-frame.core/f-var
+clj꞉re-re-frame.core꞉> 
+(defmacro make-alias
+  "creates an alias for re-frame.core function"
+  [f-var]
+  `(let [f-name# (-> ~f-var meta :name name symbol)]
+     (defn f-name#
+       [& args]
+       (apply ~f-var args))))
+#'re-re-frame.core/make-alias
+clj꞉re-re-frame.core꞉> 
+(make-alias #'re-frame.core/dispatch)
+; Syntax error macroexpanding clojure.core/defn at (src/re_re_frame/core.cljc:205:1).
+; re-re-frame.core/args - failed: simple-symbol? at: [:fn-tail :arity-1 :params :var-params :var-form :local-symbol] spec: :clojure.core.specs.alpha/local-name
+; re-re-frame.core/args - failed: vector? at: [:fn-tail :arity-1 :params :var-params :var-form :seq-destructure] spec: :clojure.core.specs.alpha/seq-binding-form
+; re-re-frame.core/args - failed: map? at: [:fn-tail :arity-1 :params :var-params :var-form :map-destructure] spec: :clojure.core.specs.alpha/map-bindings
+; re-re-frame.core/args - failed: map? at: [:fn-tail :arity-1 :params :var-params :var-form :map-destructure] spec: :clojure.core.specs.alpha/map-special-binding
+; & - failed: vector? at: [:fn-tail :arity-n :bodies :params] spec: :clojure.core.specs.alpha/param-list
+clj꞉re-re-frame.core꞉> 

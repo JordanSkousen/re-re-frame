@@ -1,0 +1,389 @@
+; This is the Calva REPL Window.
+; It's just a file, really, with some special treatment from Calva.
+; Use it as a REPL input prompt if you like. (When the REPL is connected.)
+; TIPS: The keyboard shortcut `ctrl+alt+o r` shows and focuses this window
+; Please see https://calva.io/repl-window/ for more info.
+; Happy coding! ♥️
+
+; TIPS: As with any Clojure file when the REPL is connected:
+; - `alt+enter` evaluates the current top level form.
+; - `ctrl+enter` evaluates the current form.
+; Special for this file:
+; - `alt+up` and `alt+down` traverse up and down the REPL command history
+;    when the cursor is after the last contents at the prompt
+; 
+; See also the Calva Inspector: https://calva.io/inspector/
+
+PLEASE NOTE
+We will update the default location of this file.
+The new default location will be
+  "<projectRootPath>/.calva/repl.calva-repl"
+For now the legacy path is used by default.
+To give yourself a smooth transition, you can opt in
+to the change, by configuring this setting as false:
+  "calva.useLegacyReplWindowPath"
+and then add "**/.calva/repl.calva-repl" to your ".gitignore" file.
+
+
+This file is configured as the output destination for all REPL output.
+You can configure this with the setting:
+  "calva.outputDestinations"
+
+
+; Jacking in...
+; Connecting using "Leiningen" project type.
+; You can make Calva auto-select this.
+;   - See https://calva.io/connect-sequences/
+; 
+
+; Starting Jack-in: (cd /Users/jordan/source/repos/re-re-frame; lein update-in :dependencies conj '[nrepl,"1.3.1"]' -- update-in :plugins conj '[cider/cider-nrepl,"0.55.4"]' -- update-in '[:repl-options,:nrepl-middleware]' conj '["cider.nrepl/cider-middleware"]' -- repl :headless)
+; Using host:port 127.0.0.1:53551 ...
+; Hooking up nREPL sessions ...
+; Connected session: clj
+; Evaluating code from settings: 'calva.autoEvaluateCode.onConnect.clj'
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+nil
+clj꞉re-re-frame.core꞉> 
+"Please see https://calva.io/output/#about-stdout-in-the-repl-window
+about why stdout printed to this file is prepended with `;` to be line comments."
+clj꞉re-re-frame.core꞉> 
+; Jack-in done.
+clj꞉re-re-frame.core꞉> 
+(reg-grab
+     :person*
+     (fn []
+       (subscribe [:person]))
+     (fn [[person] f]
+       (apply f person)))
+#function[re-frame.subs/reg-sub/subs-handler-fn--955]
+clj꞉re-re-frame.core-test꞉> 
+(grab @db/app-db :person* string/upper-case)
+; Execution error (ArityException) at re-re-frame.core-test/eval11026 (REPL:73).
+; Wrong number of args (3) passed to: re-re-frame.core/eval1587/fn--1588
+clj꞉re-re-frame.core-test꞉> 
+(reg-grab
+     :first-name
+     (fn [db]
+       (get db :first-name)))
+#function[re-frame.subs/reg-sub/subs-handler-fn--955]
+clj꞉re-re-frame.core-test꞉> 
+(grab @db/app-db :first-name)
+nil
+clj꞉re-re-frame.core-test꞉> 
+(let [signals '(:person*
+                  (fn []
+                    (subscribe [:person]))
+                  (fn [[person] f]
+                    (apply f person)))])
+nil
+clj꞉re-re-frame.core꞉> 
+(let [args '(:person*
+                  (fn []
+                    (subscribe [:person]))
+                  (fn [[person] f]
+                    (apply f person)))]
+    (->> args
+         (drop 1)
+         drop-last
+         vec))
+[(fn [] (subscribe [:person]))]
+clj꞉re-re-frame.core꞉> 
+(let [args '(:person*
+                  (fn []
+                    (subscribe [:person]))
+                  (fn [[person] f]
+                    (apply f person)))]
+    (->> args
+         (drop 1)
+         drop-last
+         vec)
+    (first args))
+:person*
+clj꞉re-re-frame.core꞉> 
+(let [args '(:person*
+                  (fn []
+                    (subscribe [:person]))
+                  (fn [[person] f]
+                    (apply f person)))]
+    (->> args
+         (drop 1)
+         drop-last
+         vec)
+    (last args))
+(fn [[person] f] (apply f person))
+clj꞉re-re-frame.core꞉> 
+#_
+; Syntax error reading source at (REPL:73:1).
+; EOF while reading
+clj꞉re-re-frame.core-test꞉> 
+(deftest test-reg-grab 
+  (testing "simple reg-grab works"
+    (reg-grab
+     :first-name
+     (fn [db]
+       (get db :first-name)))
+    (is (= @(subscribe [:first-name]) "Brandon"))
+    (is (= (grab @db/app-db :first-name) "Brandon")))
+  
+  (testing "reg-grab with arguments works"
+    (reg-grab
+     :address
+     (fn [db key]
+       (get-in db [:address key])))
+    (is (= @(subscribe [:address :city]) "Las Vegas"))
+    (is (= (grab @db/app-db :address :state) "Nevada")))
+  
+  (testing "reg-grab with 1 :<- signal works"
+    (reg-grab
+     :address-line-1
+     :<- [:address]
+     (fn [[address db]]
+       (:address-line-1 address)))
+    (is (= @(subscribe [:address-line-1]) "3111 S Valley View Blvd"))
+    (is (= (grab @db/app-db :address-line-1) "3111 S Valley View Blvd")))
+  
+  (testing "reg-grab with 2 :<- signals works"
+    (reg-grab
+     :person
+     :<- [:first-name]
+     :<- [:address]
+     (fn [[first-name address db] include-address?]
+       (if include-address?
+         (-> (string/join " " [first-name (:last-name db) "lives at" (:address-line-1 address) (:address-line-2 address) (:city address) (:state address) (:zip-code address)]))
+         (str first-name " " (:last-name db)))))
+    (is (= @(subscribe [:person]) "Brandon Flowers"))
+    (is (= (grab @db/app-db :person) "Brandon Flowers"))
+    (is (= @(subscribe [:person true]) "Brandon Flowers lives at 3111 S Valley View Blvd F-107 Las Vegas Nevada 89102"))
+    (is (= (grab @db/app-db :person true) "Brandon Flowers lives at 3111 S Valley View Blvd F-107 Las Vegas Nevada 89102")))
+  
+  (testing "reg-grab with signal fn works"
+    (reg-grab
+     :person*
+     (fn []
+       (subscribe [:person]))
+     (fn [& args]
+       args
+       #_(apply f person)))
+    (is (= @(subscribe [:person* string/upper-case]) "BRANDON FLOWERS LIVES AT 3111 S VALLEY VIEW BLVD F-107 LAS VEGAS NEVADA 89102"))
+    (is (= (grab @db/app-db :person* string/upper-case) "BRANDON FLOWERS LIVES AT 3111 S VALLEY VIEW BLVD F-107 LAS VEGAS NEVADA 89102"))))
+#'re-re-frame.core-test/test-reg-grab
+clj꞉re-re-frame.core-test꞉> 
+(reg-grab
+     :person*
+     (fn []
+       (subscribe [:person]))
+     (fn [& args]
+       args
+       #_(apply f person)))
+#function[re-frame.subs/reg-sub/subs-handler-fn--955]
+; 
+; Sep 21, 2025 7:05:21 PM clojure.tools.logging$eval530$fn__533 invoke
+; WARNING: re-frame: overwriting :sub handler for: :person*
+clj꞉re-re-frame.core-test꞉> 
+(grab @db/app-db :person* string/upper-case)
+; Execution error (ArityException) at re-re-frame.core-test/eval11895 (REPL:74).
+; Wrong number of args (3) passed to: re-re-frame.core/eval1587/fn--1588
+clj꞉re-re-frame.core-test꞉> 
+#_
+; Syntax error reading source at (REPL:69:1).
+; EOF while reading
+clj꞉re-re-frame.core-test꞉> 
+reg-grab
+#function[re-re-frame.core/reg-grab]
+clj꞉re-re-frame.core-test꞉> 
+(reg-grab
+     :person*
+     #_(fn []
+       (subscribe [:person]))
+     (fn [& args]
+       args
+       #_(apply f person)))
+#function[re-frame.subs/reg-sub/subs-handler-fn--955]
+; 
+; Sep 21, 2025 7:05:38 PM clojure.tools.logging$eval530$fn__533 invoke
+; WARNING: re-frame: overwriting :sub handler for: :person*
+clj꞉re-re-frame.core-test꞉> 
+(grab @db/app-db :person* string/upper-case)
+; Execution error (ArityException) at re-re-frame.core-test/eval11901 (REPL:74).
+; Wrong number of args (3) passed to: re-re-frame.core/eval1587/fn--1588
+clj꞉re-re-frame.core-test꞉> 
+(reg-grab
+     :person**
+     #_(fn []
+       (subscribe [:person]))
+     (fn [& args]
+       args
+       #_(apply f person)))
+#function[re-frame.subs/reg-sub/subs-handler-fn--955]
+clj꞉re-re-frame.core-test꞉> 
+(grab @db/app-db :person** string/upper-case)
+; Execution error (ArityException) at re-re-frame.core-test/eval11907 (REPL:74).
+; Wrong number of args (3) passed to: re-re-frame.core/eval1587/fn--1588
+clj꞉re-re-frame.core-test꞉> 
+(reg-grab
+   :idiot 
+   (fn [& args]
+     args))
+#function[re-frame.subs/reg-sub/subs-handler-fn--955]
+clj꞉re-re-frame.core꞉> 
+(grab @db/app-db :idiot string/upper-case)
+; Syntax error compiling at (src/re_re_frame/core.clj:87:3).
+; No such namespace: db
+clj꞉re-re-frame.core꞉> 
+(grab @re-frame.db/app-db :idiot string/upper-case)
+; Syntax error compiling at (src/re_re_frame/core.clj:87:3).
+; No such namespace: string
+clj꞉re-re-frame.core꞉> 
+(grab @re-frame.db/app-db :idiot clojure.string/upper-case)
+; Execution error (ArityException) at re-re-frame.core/eval11925 (REPL:87).
+; Wrong number of args (3) passed to: re-re-frame.core/eval1587/fn--1588
+clj꞉re-re-frame.core꞉> 
+:idiot
+:idiot
+clj꞉re-re-frame.core꞉> 
+(grab @re-frame.db/app-db :idiot)
+({})
+clj꞉re-re-frame.core꞉> 
+(reg-grab
+   :idiot 
+   (fn [& args]
+     args))
+#function[re-frame.subs/reg-sub/subs-handler-fn--955]
+; 
+; Sep 21, 2025 7:08:15 PM clojure.tools.logging$eval530$fn__533 invoke
+; WARNING: re-frame: overwriting :sub handler for: :idiot
+clj꞉re-re-frame.core꞉> 
+(grab @re-frame.db/app-db :idiot clojure.string/upper-case)
+; Execution error (ArityException) at re-re-frame.core/eval11933 (REPL:87).
+; Wrong number of args (3) passed to: re-re-frame.core/eval1587/fn--1588
+clj꞉re-re-frame.core꞉> 
+(defmulti grab
+  "Grabs a value from the db. Essentially works like re-frame.core/subscribe, but is instead meant to be used inside re-frame handlers.
+   To use grab, you'll need to first register a grab method with reg-grab (see below).
+   Args are: 
+    1. The re-frame app-db
+    2. The key of the reg-grab fn to call
+    3. All other arguments to send to the grab method"
+  (fn [_ key & args] key))
+nil
+clj꞉re-re-frame.core꞉> 
+(reg-grab
+   :idiot 
+   (fn [& args]
+     args))
+#function[re-frame.subs/reg-sub/subs-handler-fn--955]
+; 
+; Sep 21, 2025 7:08:26 PM clojure.tools.logging$eval530$fn__533 invoke
+; WARNING: re-frame: overwriting :sub handler for: :idiot
+clj꞉re-re-frame.core꞉> 
+(grab @re-frame.db/app-db :idiot clojure.string/upper-case)
+; Execution error (ArityException) at re-re-frame.core/eval11945 (REPL:87).
+; Wrong number of args (3) passed to: re-re-frame.core/eval1587/fn--1588
+clj꞉re-re-frame.core꞉> 
+(defn inner-idiot
+    [& args]
+    args)
+#'re-re-frame.core/inner-idiot
+clj꞉re-re-frame.core꞉> 
+(reg-grab
+   :idiot 
+   inner-idiot)
+#function[re-frame.subs/reg-sub/subs-handler-fn--955]
+; 
+; Sep 21, 2025 7:12:11 PM clojure.tools.logging$eval530$fn__533 invoke
+; WARNING: re-frame: overwriting :sub handler for: :idiot
+clj꞉re-re-frame.core꞉> 
+(grab @re-frame.db/app-db :idiot clojure.string/upper-case)
+; Execution error (ArityException) at re-re-frame.core/eval11950 (REPL:89).
+; Wrong number of args (3) passed to: re-re-frame.core/eval1587/fn--1588
+clj꞉re-re-frame.core꞉> 
+(grab @re-frame.db/app-db :idiot clojure.string/upper-case)
+; Execution error (ArityException) at re-re-frame.core/eval11952 (REPL:89).
+; Wrong number of args (3) passed to: re-re-frame.core/eval1587/fn--1588
+clj꞉re-re-frame.core꞉> 
+:idiot2
+:idiot2
+clj꞉re-re-frame.core꞉> 
+(reg-grab
+   :idiot2
+   inner-idiot)
+#function[re-frame.subs/reg-sub/subs-handler-fn--955]
+clj꞉re-re-frame.core꞉> 
+(grab @re-frame.db/app-db :idiot2 clojure.string/upper-case)
+; Execution error (ArityException) at re-re-frame.core/eval11956 (REPL:89).
+; Wrong number of args (3) passed to: re-re-frame.core/eval1587/fn--1588
+clj꞉re-re-frame.core꞉> 
+(reg-grab
+   :idiot 
+   (fn idiot-fn [& args]
+     args))
+#function[re-frame.subs/reg-sub/subs-handler-fn--955]
+; 
+; Sep 21, 2025 7:13:23 PM clojure.tools.logging$eval530$fn__533 invoke
+; WARNING: re-frame: overwriting :sub handler for: :idiot
+clj꞉re-re-frame.core꞉> 
+(grab @re-frame.db/app-db :idiot clojure.string/upper-case)
+; Execution error (ArityException) at re-re-frame.core/eval11962 (REPL:87).
+; Wrong number of args (3) passed to: re-re-frame.core/eval1587/fn--1588
+clj꞉re-re-frame.core꞉> 
+grab
+#multifn[grab 0x44ef598c]
+clj꞉re-re-frame.core꞉> 
+(defn reg-grab
+  "Defines a `grab` method and registers it as a re-frame subscription, all in one.
+   You can call this grab method by either calling re-frame.core/subscribe or grab (see above).
+   The args are exactly the same as re-frame.core/reg-sub, with the id keyword as the first arg and fn as the second arg.
+    * Note: `f`'s args are first the db, then the args sent with subscribe or grab are 2nd, 3rd, 4th etc.
+      Notice the args aren't in their own array, and you don't have to skip the 1st arg! For example, instead of writing the args like usual:
+      ```
+       (reg-sub
+         :example
+         (fn [db [_ arg1 arg2]]
+           ...))
+      ```
+      The args to reg-grab are written as:
+      ```
+       (reg-grab
+         :example 
+         (fn [db arg1 arg2]
+           ...))
+      ```"
+  [& args]
+  (let [key (first args)
+        signals (->> args
+                     (drop 1)
+                     drop-last
+                     vec)
+        f (last args)]
+    (defmethod grab
+      key
+      [db _ & args]
+      (let [db' (apply-signals signals db args)]
+        (apply f (into [db'] args))))
+    (reg-sub
+     key
+     (fn sub-fn [db [_ & args]]
+       (apply grab (into [db key] args))))))
+#'re-re-frame.core/reg-grab
+clj꞉re-re-frame.core꞉> 
+clojure.string/upper-case
+#function[clojure.string/upper-case]
+clj꞉re-re-frame.core꞉> 
+(grab @re-frame.db/app-db :idiot clojure.string/upper-case)
+; Execution error (ArityException) at re-re-frame.core/eval11973 (REPL:87).
+; Wrong number of args (3) passed to: re-re-frame.core/eval1587/fn--1588
+clj꞉re-re-frame.core꞉> 
+(defmulti grab
+  "Grabs a value from the db. Essentially works like re-frame.core/subscribe, but is instead meant to be used inside re-frame handlers.
+   To use grab, you'll need to first register a grab method with reg-grab (see below).
+   Args are: 
+    1. The re-frame app-db
+    2. The key of the reg-grab fn to call
+    3. All other arguments to send to the grab method"
+  (fn grab-fn [_ key] key))
+nil
+clj꞉re-re-frame.core꞉> 
+(grab @re-frame.db/app-db :idiot clojure.string/upper-case)
+; Execution error (ArityException) at re-re-frame.core/eval11981 (REPL:87).
+; Wrong number of args (3) passed to: re-re-frame.core/eval1587/fn--1588
+clj꞉re-re-frame.core꞉> 
