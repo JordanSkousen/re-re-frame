@@ -6,6 +6,9 @@
  / /  /  __/_____/ /  /  __/_____/ __/ /  / /_/ / / / / / /  __/
 /_/   \___/     /_/   \___/     /_/ /_/   \__,_/_/ /_/ /_/\___/ 
 ```
+
+[![Clojars Project](https://img.shields.io/clojars/v/com.jothedev/re-re-frame.svg)](https://clojars.org/com.jothedev/re-re-frame)
+
 ## 🧩 The last missing piece of `re-frame`
 
 - Fixes the problem of calling `subscribe` inside an event handler ([The "Subscribe was called outside of a reactive context error"](https://day8.github.io/re-frame/FAQs/UseASubscriptionInAnEventHandler/))

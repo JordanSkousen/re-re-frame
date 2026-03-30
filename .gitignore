@@ -16,3 +16,4 @@ pom.xml.asc
 .cpcache/
 .lsp/
 .portal/
+HOW_TO_DEPLOY.md
